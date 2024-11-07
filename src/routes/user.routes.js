@@ -3,9 +3,9 @@ import {login, signup} from "../controllers/User.controller.js";
 
 const router = Router();
 
-router.post("/signup",signup);
+router.route("/signup").post(signup);
 
-router.post("/login",login);
+router.route("/login").post(login);
 
 
 export default router;
