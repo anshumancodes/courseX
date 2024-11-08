@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import Course from "../models/Course.model.js";
 import ApiResponse from "../utils/Apiresponse.js";
 import ApiError from "../utils/ApiError.js";
+import { User } from "lucide-react";
 
 
 const CourseIdGenerator=(courseName)=>{
@@ -46,6 +47,32 @@ const DeleteCourse=async (req,res)=>{
     }
     return res.status(200).json(new ApiResponse(200,"Course deleted successfully",course));
 }
+const fetchCourses = async (req,res)=>{
+    const {user}=req.user;
+    const userCourses=await User.findOne({_id:user.id}).select("courses");
+    if(!userCourses){
+        return res.status(400).json(new ApiError(400,"No courses found"));
+    }
 
+    const courses=await Course.find({_id:{$in:userCourses.courses}});
+    if(!courses){
+        return res.status(400).json(new ApiError(400,"Invalid courses"));
+    }
+    return res.status(200).json(new ApiResponse(200,"Courses fetched successfully",courses));
 
-export {CreateCourse,DeleteCourse};
+}
+const BuyCourse=async (req,res)=>{
+    const {courseId}=req.params;
+    const {user}=req.user;
+    const course=await Course.findOne({courseId});
+    if(!course){
+        return res.status(400).json(new ApiError(400,"Course not found"));
+    }
+   const UserBoughtCourse=await User.findOneAndUpdate({_id:user.id},{$push:{courses:course.courseId}});
+   if(!UserBoughtCourse){
+       return res.status(400).json(new ApiError(400,"Something went wrong while buying the course"));
+   }
+   return res.status(200).json(new ApiResponse(200,"Course bought successfully",UserBoughtCourse));
+}
+
+export {CreateCourse,DeleteCourse,fetchCourses,BuyCourse};
