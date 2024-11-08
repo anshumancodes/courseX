@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import Course from "../models/Course.model.js";
 import ApiResponse from "../utils/Apiresponse.js";
 import ApiError from "../utils/ApiError.js";
-import { User } from "lucide-react";
+import User from "../models/User.model.js";
 
 
 const CourseIdGenerator=(courseName)=>{
