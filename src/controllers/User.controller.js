@@ -2,6 +2,9 @@ import User from "../models/User.model.js";
 import ApiResponse from "../utils/Apiresponse.js";
 import ApiError from "../utils/ApiError.js";
 import jwt from "jsonwebtoken";
+
+
+// user login, signup, purchase a course, see course
 const signup = async (req, res) => {
   const { name, email, username, password } = req.body;
 
@@ -70,4 +73,4 @@ const login = async (req, res) => {
     }
 };
 
-export { signup, login };
+export { signup, login,tokenegenerator };
